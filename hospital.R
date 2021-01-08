@@ -1,17 +1,16 @@
 library(MASS)
-library(caret)
 library(car)
 ##importing the dataset##
 hospital=read.csv('index.txt',sep='\t')
 #cleaning up the dataframe for analysis
 hospital$MedSchool[hospital$MedSchool==1]<-'MedSchool1'
 hospital$MedSchool[hospital$MedSchool==2]<-'MedSchool2'
-hospital$Region[hospital$Region==1]<-'Region1'
-hospital$Region[hospital$Region==2]<-'Region2'
-hospital$Region[hospital$Region==3]<-'Region3'
-hospital$Region[hospital$Region==4]<-'Region4'
+hospital$Region[hospital$Region==1]<-'NE'
+hospital$Region[hospital$Region==2]<-'NC'
+hospital$Region[hospital$Region==3]<-'S'
+hospital$Region[hospital$Region==4]<-'W'
 # partioning the dataset into training and testing 
-ind<-sample(2,nrow(hospital),replace=TRUE,prob=c(0.8,0.2))
+ind<-sample(2,nrow(hospital),replace=TRUE,prob=c(0.7,0.3))
 training_data<-hospital[ind==1,]
 testing_data<-hospital[ind==2,]
 ## correlation matrix for the predictors
@@ -35,7 +34,7 @@ output<-cbind(testing_data,pred)
 actuals<-testing_data$InfctRsk
 scores<-(abs(pred-actuals))/actuals
 summary(scores)
-lm.fit=lm(formula = InfctRsk~,data=training_data)
+lm.fit=lm(formula = InfctRsk~.,data=training_data)
 summary(lm.fit)
 ## checking for potential problems i)non - linearity ii) correlation of error terms iii) non-constant variance of error terms 
 ## iv) outliers v) high leverage points 
